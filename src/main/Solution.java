@@ -1,5 +1,8 @@
 package main;
 
+/**
+ *	Data object. Models a solution (which may be in progress) and its characteristics.
+ */
 public interface Solution<T> {
 
 	/**
