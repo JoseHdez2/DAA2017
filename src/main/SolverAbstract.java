@@ -5,19 +5,7 @@ package main;
  * @param <T> Type of the Problem.
  */
 public abstract class SolverAbstract<T> {
-
-	/**
-	 *	Types of objective functions.
-	 */
-	public enum ObjFuncType {
-		Maximize,
-		Minimize,
-//		NoObjectiveFunction	// TODO maybe this for the case of RAM machines...
-	}
 	
-	/** Force all Solvers to have an intent towards the objective function. */
-	abstract ObjFuncType getObjectiveFunctionType();
-	
-	/** */
-	abstract Double evaluateSolutionToProblem(Solution<T> sol, Problem<T> prob);
+	/** Assess the validity and optimality of a solution for a certain problem. */
+	public abstract void evaluateSolutionToProblem(Solution<T> sol, T prob);
 }

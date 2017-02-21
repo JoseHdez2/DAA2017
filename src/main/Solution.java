@@ -3,7 +3,7 @@ package main;
 public interface Solution<T> {
 
 	/**
-	 * State of a solution
+	 * State of a solution.
 	 */
 	public enum State {
 		InProgress,	// Half-built; it does not meet the problem's criteria for now.

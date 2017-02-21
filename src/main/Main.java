@@ -7,9 +7,9 @@ public abstract class Main {
 	
 	protected Main(){
 		// Set menu problem since the rest of the program depends on it.
-		menuProblem = setMenuProblem();
+		menuProblem = promptMenuProblem();
 	}
 	
 	/** Prompt the user one way or another to choose the type of problem to work with.*/
-	protected abstract Problem.Type setMenuProblem();
+	protected abstract Problem.Type promptMenuProblem();
 }
