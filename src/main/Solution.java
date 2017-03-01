@@ -19,4 +19,10 @@ public abstract class Solution<P> {
 	
 	protected State state;
 	protected float value;
+	
+	public int compareTo(Solution<P> s){
+		if(value < s.getValue()) return -1;
+		if(value > s.getValue()) return 1;
+		else return 0;
+	}
 }

@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import lombok.Data;
 import main.Problem;
 
+/**
+ *	Discrete backpack problem.
+ */
 @Data
 public class ProblemBackpack implements Problem<ProblemBackpack> {
 	
-	protected ArrayList<Float> values;
-	protected ArrayList<Float> weigths;
+	protected ArrayList<Integer> values;
+	protected ArrayList<Integer> weights;
+	
+	protected Integer backpackWeight;
 	
 	@Override
 	public Type getType() {

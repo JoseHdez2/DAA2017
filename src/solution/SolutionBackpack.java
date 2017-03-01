@@ -8,6 +8,11 @@ import problem.ProblemBackpack;
 
 @Data
 public class SolutionBackpack extends Solution<ProblemBackpack>{
+	
+	public SolutionBackpack(){
+		includedElements = new ArrayList<>();
+	}
+	
 	/** Elements included in the backpack. */
 	ArrayList<Integer> includedElements;
 }

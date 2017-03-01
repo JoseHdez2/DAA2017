@@ -7,11 +7,16 @@ package main;
 public abstract class SolverAbstract<S,P> {
 	
 	public enum SolvingMethod{
+		BranchAndBound,
 		BruteForce,
+		DynamicProgramming,
+		GRASP,
+		GreedyAlgorithm,
+		VNS,
 	}
 	
 	/** Assess the validity and optimality of a solution for a certain problem. */
 	public abstract void evaluateSolutionToProblem(S sol, P prob);
 	
-	public abstract Solution<P> solve(Problem<P> p, SolvingMethod method);
+	public abstract S solve(P p, SolvingMethod method);
 }
