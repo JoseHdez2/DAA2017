@@ -2,12 +2,11 @@ package problem;
 
 import main.Problem;
 
-public class ProblemTSP implements Problem {
+public class ProblemTSP implements Problem<ProblemTSP> {
 
 	@Override
 	public ObjFuncType getObjFuncType() {
-		// TODO Auto-generated method stub
-		return null;
+		return ObjFuncType.Minimize;
 	}
 	
 	@Override

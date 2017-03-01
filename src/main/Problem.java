@@ -3,12 +3,13 @@ package main;
 /**
  *	Data object. Models a problem and its requirements.
  */
-public interface Problem {
+public interface Problem<T> {
 
 	/**
 	 *	Types of problems this program can handle.
 	 */
 	public enum Type {
+		BackpackProblem,
 		MaximumMeanDispersion,
 		MaximumDiversity,
 		TravelingSalesmanProblem
