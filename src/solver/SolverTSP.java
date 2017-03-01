@@ -4,11 +4,12 @@ import main.Problem;
 import main.Solution;
 import main.SolverAbstract;
 import problem.ProblemTSP;
+import solution.SolutionTSP;
 
-public class SolverTSP extends SolverAbstract<ProblemTSP>{
+public class SolverTSP extends SolverAbstract<SolutionTSP,ProblemTSP>{
 
 	@Override
-	public void evaluateSolutionToProblem(Solution<ProblemTSP> sol, ProblemTSP prob) {
+	public void evaluateSolutionToProblem(SolutionTSP sol, ProblemTSP prob) {
 		// TODO Auto-generated method stub
 	}
 

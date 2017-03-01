@@ -1,16 +1,27 @@
 package solver;
 
+import java.util.ArrayList;
+
+import lombok.Getter;
+import lombok.Setter;
 import main.Problem;
 import main.Solution;
 import main.SolverAbstract;
 import problem.ProblemBackpack;
+import solution.SolutionBackpack;
 
-public class SolverBackpack extends SolverAbstract<ProblemBackpack> {
+public class SolverBackpack extends SolverAbstract<SolutionBackpack,ProblemBackpack> {
 
+	/** (values / weights) */
+	@Setter @Getter protected ArrayList<Float> ratios;
+	
 	@Override
-	public void evaluateSolutionToProblem(Solution<ProblemBackpack> sol, ProblemBackpack prob) {
-		// TODO Auto-generated method stub
-		
+	public void evaluateSolutionToProblem(SolutionBackpack sol, ProblemBackpack prob) {
+		Float backpackValue = 0f;
+		for(Integer i : sol.getIncludedElements()){
+			backpackValue += prob.getValues().get(i);
+		}
+		sol.setValue(backpackValue);
 	}
 
 	@Override

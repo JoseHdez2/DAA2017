@@ -1,10 +1,13 @@
 package main;
 
+import lombok.Data;
+
 /**
  *	Data object. Models a solution (which may be in progress) and its characteristics.
  */
-public interface Solution<T> {
-
+@Data
+public abstract class Solution<P> {
+	
 	/**
 	 * State of a solution.
 	 */
@@ -13,4 +16,7 @@ public interface Solution<T> {
 		Failed,		// This "solution" fails to meet the problem's criteria.
 		Complete	// Meets the problem's criteria, though it may not be optimal.
 	}
+	
+	protected State state;
+	protected float value;
 }

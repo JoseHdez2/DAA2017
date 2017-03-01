@@ -1,9 +1,16 @@
 package problem;
 
+import java.util.ArrayList;
+
+import lombok.Data;
 import main.Problem;
 
-public class ProblemBackpack implements Problem {
-
+@Data
+public class ProblemBackpack implements Problem<ProblemBackpack> {
+	
+	protected ArrayList<Float> values;
+	protected ArrayList<Float> weigths;
+	
 	@Override
 	public Type getType() {
 		return Problem.Type.BackpackProblem;
