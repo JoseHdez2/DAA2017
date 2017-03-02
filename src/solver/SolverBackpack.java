@@ -1,7 +1,9 @@
 package solver;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
+import main.Solution.State;
 import main.SolverAbstract;
 import problem.ProblemBackpack;
 import solution.SolutionBackpack;
@@ -48,9 +50,22 @@ public class SolverBackpack extends SolverAbstract<SolutionBackpack,ProblemBackp
 
 	@Override
 	public SolutionBackpack solve(ProblemBackpack p, SolvingMethod method) {
-		if(method == SolvingMethod.DynamicProgramming) return solveByDynamicProgramming(p);
-		if(method == SolvingMethod.BranchAndBound) return solveByBranchAndBound(p);
-		else throw new IllegalArgumentException("Unsupported solving method");
+		switch(method){
+		case BranchAndBound:
+			return solveByBranchAndBound(p);
+//		case BruteForce:
+//			break;
+		case DynamicProgramming:
+			return solveByDynamicProgramming(p);
+//		case GRASP:
+//			break;
+		case GreedyAlgorithm:
+			return solveByGreedy(p);
+//		case VNS:
+//			break;
+		default:
+			throw new IllegalArgumentException("Unsupported solving method");
+		}
 	}
 	
 	private SolutionBackpack solveByDynamicProgramming(ProblemBackpack p){
@@ -101,11 +116,14 @@ public class SolverBackpack extends SolverAbstract<SolutionBackpack,ProblemBackp
 		SolutionBackpack sol = new SolutionBackpack();
 		do {
 			bestElem = -1;	// dummy value meaning "no candidate yet".
-			for (int i = 0; i < p.getValues().size(); i++){
-				if (!sol.getIncludedElements().contains(bestElem)				// If not already in backpack,
-						&& p.getValues().get(i) > p.getValues().get(bestElem) 	// and is better than current best
-						&& p.getWeights().get(i) <= availableWeight){			// and can fit into backpack
+			ArrayList<Integer> unincludedElements = unincludedElements(sol, p);
+			if(unincludedElements.isEmpty()) break;
+			for (Integer i : unincludedElements){
+				if((bestElem == -1
+				|| p.getValues().get(i) > p.getValues().get(bestElem)) 	// Is better than current best
+				&& p.getWeights().get(i) <= availableWeight){			// and can fit into backpack
 					// Then add the element into the solution.
+					bestElem = i;
 					sol.getIncludedElements().add(bestElem);
 					availableWeight -= p.getWeights().get(bestElem);
 				}
@@ -113,23 +131,86 @@ public class SolverBackpack extends SolverAbstract<SolutionBackpack,ProblemBackp
 		} while (bestElem != -1);	// Until no candidates are found (too full or no more items)
 		return sol;
 	}
+		
+	SolutionBackpack bestCandidate;
 	
 	private SolutionBackpack solveByBranchAndBound(ProblemBackpack p){
 		ArrayList<SolutionBackpack> sols = new ArrayList<>();
-		// Get 
-		SolutionBackpack bestCandidateSol = solveByGreedy(p);
-		// Try
+		// Quickly get lower bound by using Greedy.
+		bestCandidate = solveByGreedy(p);
+		
+		// Populate ratios
+		ratios = new ArrayList<>();
+		for(int i = 0; i < p.getValues().size(); i++){
+			ratios.add(((float)p.getValues().get(i))/p.getWeights().get(i));
+		}
+		
 		sols.add(new SolutionBackpack());
 		while(!sols.isEmpty()){
-			branchOut(p, sols.get(0));
+			// Branch out the most promising solution.
+			sols.addAll(branchOut(p, sols.remove(0)));
+			// Sort the solutions, from most promising to least.
+			Collections.sort(sols, Collections.reverseOrder());
 		}
+		return bestCandidate;
 	}
 	
-	private SolutionBackpack branchOut(ProblemBackpack p, SolutionBackpack s){
-		for(int i = 0; i < p.getValues().size(); i++){
-			if(){
-				
-			}
+	private ArrayList<SolutionBackpack> branchOut(ProblemBackpack p, SolutionBackpack s){
+		ArrayList<SolutionBackpack> newSols = new ArrayList<>();
+		for (Integer i : unincludedElements(s, p)){
+			SolutionBackpack newSol = s.clone();
+			newSol.getIncludedElements().add(i);
+			this.evaluateSolutionToProblem(newSol, p);
+			this.evaluateHeuristicToProblem(s, p);
+			if(newSol.fValue() > bestCandidate.fValue()	// If it's more promising than current
+					&& remainingWeight(newSol, p) >= 0)	// and if it fits in the backpack
+					newSols.add(newSol);
 		}
+		if(newSols.isEmpty()){ // Means this solution can't branch out anymore.
+			s.setState(State.Complete);
+			if(s.getValue() > bestCandidate.getValue())
+				bestCandidate = s;
+		}
+		return newSols;
+	}
+
+	/** The weight of a backpack being used in a solution. */
+	static private int usedWeight(SolutionBackpack sol, ProblemBackpack prob){
+		Integer usedWeight = 0;
+		for(Integer i : sol.getIncludedElements()){
+			usedWeight += prob.getWeights().get(i);
+		}
+		return usedWeight;
+	}
+	
+	static private int remainingWeight(SolutionBackpack sol, ProblemBackpack prob){
+		return prob.getBackpackWeight() - usedWeight(sol, prob);
+	}
+	
+	static private ArrayList<Integer> unincludedElements(SolutionBackpack sol, ProblemBackpack prob){
+		ArrayList<Integer> ue = new ArrayList<>();
+		for(int i = 0; i < prob.getValues().size(); i++){
+			if(!sol.getIncludedElements().contains(i)) ue.add(i);
+		}
+		return ue;
+	}
+	
+	@Override
+	public void evaluateHeuristicToProblem(SolutionBackpack sol, ProblemBackpack prob) {
+		int bestNonTaken = -1;
+		float bestNonTakenRatio = Float.NEGATIVE_INFINITY;
+		int i = 0;
+		do {
+			if(!sol.getIncludedElements().contains(i)
+					&& ratios.get(i) > bestNonTakenRatio){
+				bestNonTaken = i;
+				bestNonTakenRatio = ratios.get(i);
+			}
+			i++;
+		} while(bestNonTaken == -1);
+		if(bestNonTaken == -1) 
+			sol.setHeuristic(0f);	// All elements are in; no hope for improvement.
+		else
+			sol.setHeuristic(bestNonTakenRatio * remainingWeight(sol, prob));
 	}
 }

@@ -17,4 +17,10 @@ public class SolverTSP extends SolverAbstract<SolutionTSP,ProblemTSP>{
 		return null;
 	}
 
+	@Override
+	public void evaluateHeuristicToProblem(SolutionTSP sol, ProblemTSP prob) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

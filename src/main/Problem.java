@@ -13,6 +13,7 @@ public interface Problem<T> {
 		BackpackProblem,
 		MaximumMeanDispersion,
 		MaximumDiversity,
+		SetCoverProblem,
 		TravelingSalesmanProblem
 	}
 	

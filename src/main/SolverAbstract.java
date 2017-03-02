@@ -18,5 +18,7 @@ public abstract class SolverAbstract<S,P> {
 	/** Assess the validity and optimality of a solution for a certain problem. */
 	public abstract void evaluateSolutionToProblem(S sol, P prob);
 	
+	public abstract void evaluateHeuristicToProblem(S sol, P prob);
+	
 	public abstract S solve(P p, SolvingMethod method);
 }
