@@ -20,12 +20,15 @@ public class TestBackpack {
 	
 	@BeforeClass
 	public static void setup(){
-		prob = new ProblemBackpack();
-		prob.setBackpackWeight(15);
+
 		Integer[] values = {10, 10, 12, 18};
 		Integer[] weights = {2, 4, 6, 9};
-		prob.setValues(new ArrayList<Integer>(Arrays.asList(values)));
-		prob.setWeights(new ArrayList<Integer>(Arrays.asList(weights)));
+		ArrayList<Integer> values2 =
+				(new ArrayList<Integer>(Arrays.asList(values)));
+		ArrayList<Integer> weights2 =
+				(new ArrayList<Integer>(Arrays.asList(weights)));
+
+		prob = new ProblemBackpack(values2, weights2, 15);
 		
 		Integer[] optSolution = {3, 1, 0};
 		optimalSol = new SolutionBackpack();

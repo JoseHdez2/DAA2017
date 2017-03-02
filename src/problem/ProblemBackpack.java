@@ -3,6 +3,7 @@ package problem;
 import java.util.ArrayList;
 
 import lombok.Data;
+import lombok.NonNull;
 import main.Problem;
 
 /**
@@ -11,10 +12,10 @@ import main.Problem;
 @Data
 public class ProblemBackpack implements Problem<ProblemBackpack> {
 	
-	protected ArrayList<Integer> values;
-	protected ArrayList<Integer> weights;
+	@NonNull protected ArrayList<Integer> values;
+	@NonNull protected ArrayList<Integer> weights;
 	
-	protected Integer backpackWeight;
+	@NonNull protected Integer backpackWeight;
 	
 	@Override
 	public Type getType() {
